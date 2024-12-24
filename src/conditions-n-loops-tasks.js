@@ -478,8 +478,9 @@ function sortByAsc(arr1) {
 function shuffleChar(str, iterations) {
   let res = str;
   const len = str.length;
+  let n = iterations % 36;
 
-  for (let n = 0; n < iterations; n += 1) {
+  while (n > 0) {
     let even = '';
     let odd = '';
 
@@ -490,6 +491,7 @@ function shuffleChar(str, iterations) {
       }
     }
     res = even + odd;
+    n -= 1;
   }
 
   return res;
@@ -512,8 +514,43 @@ function shuffleChar(str, iterations) {
  * @param {number} number The source number
  * @returns {number} The nearest larger number, or original number if none exists.
  */
-function getNearestBigger(/* number */) {
-  throw new Error('Not implemented');
+function getNearestBigger(num) {
+  let n = num;
+  const digits = [];
+  const array = [];
+  let digitCount = 0;
+  while (n > 0) {
+    digits[digitCount] = n % 10;
+    n = Math.floor(n / 10);
+    digitCount += 1;
+  }
+  for (let i = 0; i < digitCount; i += 1) {
+    array[i] = digits[digitCount - 1 - i];
+  }
+  let i = array.length - 1;
+  while (i > 0 && array[i - 1] >= array[i]) i -= 1;
+  if (i <= 0) return array;
+
+  let j = array.length - 1;
+  while (array[j] <= array[i - 1]) j -= 1;
+  let temp = array[i - 1];
+  array[i - 1] = array[j];
+  array[j] = temp;
+
+  j = array.length - 1;
+  while (i < j) {
+    temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+    i += 1;
+    j -= 1;
+  }
+
+  let reversedNumber = 0;
+  for (let k = 0; k < digitCount; k += 1) {
+    reversedNumber = reversedNumber * 10 + array[k];
+  }
+  return reversedNumber;
 }
 
 module.exports = {
